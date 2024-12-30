@@ -74,7 +74,7 @@ class CustomIntegration implements IntegrationBase {
       throw new Error("You must provide a 'from' table!")
     }
     const insertRecords = JSON.parse(query.records)
-    return await this.supabase.from(query.from).insert(insertRecords)
+    return await this.supabase.from(query.from).insert(insertRecords).select()
   }
 
   async read(query: { from: string, select: string; extra: { [key: string]: string } }) {
@@ -82,7 +82,7 @@ class CustomIntegration implements IntegrationBase {
       throw new Error("You must provide a 'from' table!")
     }
     if (!query.select) {
-      return await this.supabase.from(query.from)
+      return await this.supabase.from(query.from).select()
     }
     if (!query.extra?.filterColumn) {
       return await this.supabase.from(query.from).select(query.select)
@@ -110,7 +110,7 @@ class CustomIntegration implements IntegrationBase {
     if (!query.from) {
       throw new Error("You must provide a 'from' table!")
     }
-    return await this.supabase.from(query.from).upsert(query.json)
+    return await this.supabase.from(query.from).upsert(query.json).select()
   }
 
   async delete(query: { from: string; extra: { [key: string]: string } }) {
@@ -123,7 +123,7 @@ class CustomIntegration implements IntegrationBase {
     return await this.supabase
       .from(query.from)
       .delete()
-      .filter(query.extra.filterColumn, query.extra.filter as FilterOperator, query.extra.filterValue)
+      .filter(query.extra.filterColumn, query.extra.filter as FilterOperator, query.extra.filterValue).select()
   }
 }
 
