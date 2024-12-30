@@ -51,7 +51,7 @@ class CustomIntegration implements IntegrationBase {
   private readonly supabaseUrl: string
   private readonly supabaseKey: string
   private readonly schema: string
-  private readonly supabase: SupabaseClient
+  private readonly supabase: SupabaseClient<any, string, any>
 
   constructor(config: { supabaseUrl: string; supabaseKey: string, schema: string }) {
     this.supabaseUrl = config.supabaseUrl
@@ -63,7 +63,9 @@ class CustomIntegration implements IntegrationBase {
     }
 
     this.supabase = createClient(this.supabaseUrl, this.supabaseKey, {
-      schema: this.schema
+      db: {
+        schema: this.schema,
+      }
     })
   }
 
